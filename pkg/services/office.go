@@ -16,9 +16,9 @@ func NewOfficeService(repo *repository.Repository) *Office {
 	}
 }
 
-func (o *Office) GetAll(ctx context.Context, page int) ([]models.Office, error) {
-	return nil, nil
+func (s *Office) GetAll(ctx context.Context) ([]models.Office, error) {
+	return s.repo.GetAll(ctx)
 }
-func (o *Office) GetById(ctx context.Context, id int) (models.OfficeDetailedInfo, error) {
-	return models.OfficeDetailedInfo{}, nil
+func (s *Office) GetById(ctx context.Context, id int) (models.OfficeDetailedInfo, error) {
+	return s.repo.GetById(ctx, id)
 }

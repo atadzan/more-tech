@@ -23,7 +23,7 @@ func (h *Handler) InitRoutes() *gin.Engine {
 	app.GET("/atms", h.getAtms)
 	app.GET("/atms/:id", h.getAtmById)
 	app.GET("/offices", h.getOffices)
-	app.GET("/offices/:id", h.getAtmById)
+	app.GET("/offices/:id", h.getOfficeById)
 
 	return app
 }
