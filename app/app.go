@@ -2,38 +2,34 @@ package app
 
 import (
 	"context"
-	"fmt"
 	"github.com/atadzan/more-tech/app/server"
+	"github.com/atadzan/more-tech/config"
+	"github.com/atadzan/more-tech/pkg/handler"
+	"github.com/atadzan/more-tech/pkg/repository"
+	"github.com/atadzan/more-tech/pkg/services"
+	"github.com/atadzan/more-tech/third_party/database"
 	"log"
-	"os"
 )
 
-func Init(ctx context.Context) error {
-
-	dbConfig := repository.Config{
-		Host:     os.Getenv(constants.DB_HOST),
-		Username: os.Getenv(constants.DB_USER),
-		Password: os.Getenv(constants.DB_PASSWORD),
-		DBName:   os.Getenv(constants.DB_NAME),
-		SSLMode:  os.Getenv(constants.DB_SSL),
-	}
-
-	dbPool, err := repository.NewPostgresDB(ctx, dbConfig)
-
+func Init(ctx context.Context, cfgPath string) error {
+	appCfg, err := config.LoadConfig(cfgPath)
 	if err != nil {
-		debug.Trace()
-		return fmt.Errorf("failed to open database: %v", err)
+		log.Println(err)
+		return err
 	}
 
-	defer dbPool.Close()
+	dbPoolConn, err := database.NewPostgresConn(ctx, appCfg.Postgres)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
 
-	repo := repository.NewRepository(dbPool)
+	repo := repository.NewRepository(dbPoolConn)
 	service := services.NewService(repo)
-	handlers := v1.NewHandler(service)
+	handlers := handler.NewHandler(service)
 	srv := new(server.Server)
 
-	if err = srv.Run(os.Getenv(constants.HTTP_PORT), handlers.InitRoutes()); err != nil {
-		debug.Trace()
+	if err = srv.Run(":"+appCfg.HTTP.Port, handlers.InitRoutes()); err != nil {
 		log.Fatalf("error http server: %s", err.Error())
 	}
 

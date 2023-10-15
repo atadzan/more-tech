@@ -3,23 +3,27 @@ package repository
 import (
 	"context"
 	"github.com/atadzan/more-tech/models"
+	"github.com/jackc/pgx/v4/pgxpool"
 )
 
-type IAtm interface {
+type IAtmRepo interface {
 	GetAll(ctx context.Context, page int) ([]models.Atm, error)
 	GetById(ctx context.Context, id int) (models.AtmDetailedInfo, error)
 }
 
-type IOffice interface {
+type IOfficeRepo interface {
 	GetAll(ctx context.Context, page int) ([]models.Office, error)
 	GetById(ctx context.Context, id int) (models.OfficeDetailedInfo, error)
 }
 
 type Repository struct {
-	Atm    IAtm
-	Office IOffice
+	Atm    IAtmRepo
+	Office IOfficeRepo
 }
 
-func NewRepository() *Repository {
-	return &Repository{}
+func NewRepository(dbPoolConn *pgxpool.Pool) *Repository {
+	return &Repository{
+		Atm:    NewAtmRepo(dbPoolConn),
+		Office: NewOfficeRepo(dbPoolConn),
+	}
 }

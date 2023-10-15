@@ -7,10 +7,10 @@ import (
 )
 
 type Atm struct {
-	repo repository.IAtm
+	repo repository.IAtmRepo
 }
 
-func NewAtmService(repo repository.Repository) *Atm {
+func NewAtmService(repo *repository.Repository) *Atm {
 	return &Atm{
 		repo: repo.Atm,
 	}

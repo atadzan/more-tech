@@ -2,8 +2,8 @@ http:
   port: 8080
 postgres:
   host: localhost
-  port: 5432
-  username: admin
-  password: adminPassword
-  dbname: moreTech
-  sslMode: false
+  port: 5433
+  username: sampleUser
+  password: samplePassword
+  dbname: sampleDB
+  SSLMode: disable

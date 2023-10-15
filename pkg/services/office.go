@@ -7,11 +7,11 @@ import (
 )
 
 type Office struct {
-	repo repository.IOffice
+	repo repository.IOfficeRepo
 }
 
-func NewOfficeService(repo repository.Repository) *Atm {
-	return &Atm{
+func NewOfficeService(repo *repository.Repository) *Office {
+	return &Office{
 		repo: repo.Office,
 	}
 }

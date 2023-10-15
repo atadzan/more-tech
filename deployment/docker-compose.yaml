@@ -1,0 +1,18 @@
+version: '3.3'
+services:
+  database:
+    image: postgres:14.1-alpine
+    container_name: sample-database
+    restart: always
+    environment:
+      - POSTGRES_USER=sampleUser
+      - POSTGRES_PASSWORD=samplePassword
+      - POSTGRES_DB=sampleDB
+    ports:
+      - '5433:5432'
+    volumes:
+      - more_storage:/var/lib/postgresql/data
+      - ./db/migrations/init_db.sql:/docker-entrypoint-initdb.d/create_tables.sql
+
+volumes:
+  more_storage:
